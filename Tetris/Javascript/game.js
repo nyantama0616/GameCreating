@@ -7,8 +7,7 @@ class Game {
         this.x = x;
         this.y = y;
         this.field = new Array(Game.h);
-        // this.activeMino = Mino.createMino(Game.startX, Game.startY, true);
-        this.activeMino = Mino.createMino(5, 25, true);
+        this.activeMino = Mino.createMino(Game.startX, Game.startY, true);
         for (let i = 0; i < Game.h; i++) {
             this.field[i] = new Array();
             for (let j = 0; j < Game.w; j++) {
