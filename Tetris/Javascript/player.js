@@ -1,10 +1,10 @@
 class Player {
-    constructor() {
-        this.game = new Game(490, 50);
+    constructor(x, y) {
+        this.game = new Game(x, y);
+        Object.seal(this);
     }
 
     draw() {
         this.game.draw();
     }
-
 }

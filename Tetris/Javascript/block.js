@@ -1,10 +1,10 @@
 class Block {
-    static l = 20;
+    static L = 20;
 
-    constructor(x, y, color = 255) {
+    constructor(x, y, pattern = 0) {
         this.x = x;
         this.y = y;
-        this.color = color;
+        this.design = Pattern.DESINGS[pattern]; //ブロックを装飾する画像
         this.lit = false;
         this.isLocked = false;
         Object.seal(this);
@@ -26,10 +26,22 @@ class Block {
         this.isLocked = isLocked;
     }
 
+    getDesign() {
+        return this.design;
+    }
+
+    setDesign(design) {
+        this.design = design;
+    }
+
+    clone(block) {
+        this.design = block.design;
+        this.lit = block.lit;
+        this.isLocked = block.isLocked;
+    }
+
     draw() {
         if (!this.lit) { return; }
-        fill(this.color);
-        noStroke();
-        rect(this.x, this.y, Block.l, Block.l);
+        image(this.design, this.x, this.y, Block.L, Block.L);
     }
 }

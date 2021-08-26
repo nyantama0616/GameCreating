@@ -1,29 +1,33 @@
+/* TODO:
+    function judgeLeft(field)といった記述を
+    geme.judgeLeft(this)のように修正。
+    P.S.
+    と思ったけど、やっぱりこのままでもいいかも？
+*/
+
 class Mino {
     static NUM = 4;
-    static SHAPES = [
-        [[-1, 0], [0, -1], [0, 0], [1, 0]], //凸
-        [[0, 0], [0, 1], [1, 1], [2, 1]], //「
-        [[0, 0], [1, 0], [2, 0], [2, -1]],　// 「の反対
-        [[0, 0], [1, 0], [1, 1], [0, 1]], //口
-        [[0, -1], [0, 0], [0, 1], [0, 2]], //|
-        [[-1, 0], [0, 0], [0, 1], [1, 1]], //乙
-        [[-1, 0], [0, 0], [0, -1], [1, -1]], //乙の反対
-    ];
-    constructor(x, y, shape, isActive, color) {
+    
+    constructor(x, y, pattern, isActive) {
         this.x = x;
         this.y = y;
+        this.pattern = pattern;
         this.blocks = new Array(Mino.NUM);
         for (let i = 0; i < Mino.NUM; i++) {
-            this.blocks[i] = [x + Mino.SHAPES[shape][i][0], y + Mino.SHAPES[shape][i][1]];
+            this.blocks[i] = [x + Pattern.SHAPES[pattern][i][0], y + Pattern.SHAPES[pattern][i][1]];
         }
         this.isActive = isActive;
     }
 
-    static createMino(x, y, isActive) {
-        let shape = Math.floor(Math.random() * Mino.SHAPES.length);
-        let mino = new Mino(x, y, shape, isActive);
+    static createMino(x, y, isActive, game) {
+        let pattern = Math.floor(Math.random() * Pattern.NUM);
+        let mino = new Mino(x, y, pattern, isActive);
+        if (mino.blocks.some(m => game.getBlock(m[1], m[0]).getIsLocked())) {
+            mino = null;
+        }
         return mino;
     }
+    
 
     // 画面左の衝突判定
     judgeLeft(field) {
@@ -74,9 +78,12 @@ class Mino {
             field[m[1]][m[0]].setLit(false);
             m[1] += 1;
         }
-        
     }
 
+    /* 
+    回転時のバグ対策用に、
+    ２次元配列をコピーする関数を簡易的に作った。
+    */
     static myCopy(ary) {
         let result = new Array(Mino.NUM);
         for (let i = 0; i < Mino.NUM; i++) {
@@ -85,6 +92,12 @@ class Mino {
         return result;
     }
 
+    /*
+        回転には行列の考え方を利用した。
+        コードは長くなったが、
+        要は回転後にミノが他のブロックとぶつかったりする場合、
+        回転をなかったことにする。(データベースのトランザクション的な)
+    */
     // 左に90度回転
     rotateLeft(field) {
         let ary = Mino.myCopy(this.blocks);
@@ -161,55 +174,65 @@ class Mino {
         }
     }
 
-    // ブロックを固定
-    lock(field) {
+    // 地面についたブロックを固定
+    lock(game) {
+        let field = game.field;
+        let top = 10 ** 9;;
         for (let i = 0; i < Mino.NUM; i++) {
             let m = this.blocks[i];
             field[m[1]][m[0]].setLit(true);
             field[m[1]][m[0]].setIsLocked(true);
+            top = min(top, m[1]);
         }
         this.isActive = false;
+        game.top = min(game.top, top);
     }
     
-    draw(field) {
+    draw(game) {
+        let field = game.field;
         if (!this.isActive) {
             return;
         }
         if (this.judgeBottom(field) && frameCount % 30 == 0) {
-            this.lock(field);
+            this.lock(game);
+            game.breakOut();
             return;
         }
         
-        // キーボード ["j", "k", "l"] でミノを操作
+        // キーボード ["j", "k", "l", "a", "d"] でミノを操作
         if (keyIsPressed && frameCount % 6 == 0) {
             switch (key) {
-                case "j":
+                case "j": //左に1マス移動
                     this.moveLeft(field);
                     break
-                    case "k":
+                    case "k": //下に2マス移動
+                        this.moveDown(field);
+                        this.moveDown(field);
                         this.moveDown(field);
                     break;
-                case "l":
+                case "l": //右に1マス移動
                     this.moveRight(field);
                     break
-                case "a":
+                case "a": //左に90度回転
                     this.rotateLeft(field);
                     break;
-                case "d":
+                case "d": //右に90度回転
                     this.rotateRight(field);
                     break;
             }
         }
 
-        //1秒おきに下に移動
-        if (frameCount % 30 === 0) {
+        //game.fallSpeedミリ秒おきに下に移動
+        if (frameCount % game.fallSpeed === 0) {
             this.moveDown(field);
         }
 
-        
+        // ここでミノを表示
         for (let i = 0; i < Mino.NUM; i++) {
             let m = this.blocks[i]
-            field[m[1]][m[0]].setLit(true);
+            let block = field[m[1]][m[0]]
+            block.setDesign(Pattern.DESINGS[this.pattern]);
+            block.setLit(true);
         }
     }
 }
