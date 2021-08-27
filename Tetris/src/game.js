@@ -73,6 +73,7 @@ class Game {
             this.shift(i, count);
         }
         this.top += count;
+        Background.BLOCK_DESTROY.play();
     }
 
     gameOver() {

@@ -25,7 +25,7 @@ class Pattern {
     static DESINGS = new Array(Pattern.NUM + 1);
     static setDesign() {
         for (let i = 0; i < Pattern.NUM + 1; i++) {
-            Pattern.DESINGS[i] = loadImage(`img/pattern${i}.png`);
+            Pattern.DESINGS[i] = loadImage(`assets/img/pattern${i}.png`);
         }
     }
 
