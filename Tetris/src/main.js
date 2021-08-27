@@ -40,7 +40,7 @@ function draw() {
     bg.loopBGM();
     // showMemory(180);
     player.draw();
-    if (frameCount % 120 == 0) {
-        console.log(Background.BLOCK_DESTROY);
-    }
+    // if (frameCount % 120 == 0) {
+    //     console.log(Background.BLOCK_DESTROY);
+    // }
 }
