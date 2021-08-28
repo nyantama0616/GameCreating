@@ -7,22 +7,27 @@ class Background {
             Background.BGMS[i] = loadSound(`assets/sound/bgm${i}.mp3`);
         }
         Background.BLOCK_DESTROY = loadSound("assets/sound/block_destroy.mp3");
+        Background.GAMEOVER = loadSound("assets/sound/game_over.mp3");
     }
     
-    constructor() {
-        this.indexOfBGM = 3;
-        this.playingCount = 10**9;
+    static set() {
+        Background.indexOfBGM = 3;
+        Background.playingCount = 10**9;
         myShuffle(Background.BGMS);
     }
 
-    loopBGM() {
-        if (this.playingCount > Background.INTERVAL_OF_BGM && keyIsPressed) {
-            // Background.BGMS[this.indexOfBGM].pause();pauseいらない？
-            this.indexOfBGM = (this.indexOfBGM + 1) % Background.BGM_NUM;
-            this.playingCount = 0;
-            Background.BGMS[this.indexOfBGM].play();
+    static pause() {
+        Background.BGMS[Background.indexOfBGM].pause();
+        Background.playingCount = 0;
+    }
+
+    static loopBGM() {
+        if (Background.playingCount > Background.INTERVAL_OF_BGM && keyIsPressed) {
+            Background.indexOfBGM = (Background.indexOfBGM + 1) % Background.BGM_NUM;
+            Background.playingCount = 0;
+            Background.BGMS[Background.indexOfBGM].play();
         } else {
-            this.playingCount++;
+            Background.playingCount++;
         }
     }
 }

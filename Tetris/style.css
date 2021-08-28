@@ -3,10 +3,62 @@ html {
     height: 100%;;
 }
 
-html {
+body {
+    position: relative;
     width: 100%;;
     height: 100%;;
     padding: 0;
+    background: black;
+}
+
+#scoreDiv {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 25%;
+    height: 16.7%;
+    background-image: url("assets/img/score.png");
+}
+
+#scoreDiv h2 {
+    display: inline;
+}
+
+#scoreDiv span {
+    font-size: 30px;
+}
+
+.score {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+}
+
+.combo {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+}
+
+.score h2 {
+    color: rgb(223, 41, 207);
+}
+
+.combo h2 {
+    color: rgb(171, 224, 46);
+}
+
+#timerContainer {
+    position: absolute;
+    top: 10%;
+    right: 2%;
+    width: 20%;
+    height: 20%;    
+}
+
+#timer {
+    font-size: 50px;
+    color: rgb(61, 61, 243);
 }
 
 #screen {

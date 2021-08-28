@@ -1,34 +1,19 @@
 "use strict";
 
-// let app = require("http").createServer(handler),
 let app = require("http").createServer(routeSetting),
     fs = require("fs"),
     url = require("url"),
     path = require("path"),
     settings = require("./settings");
 
-function handler(req, res) {
-    console.log("handler??");
-    fs.readFile(settings.ROOT + "index.html", "utf-8", function (err, data) {
-        console.log("connecting....utf-8");
-        if (err) {
-            res.writeHead(500);
-            return res.end("Error");
-        }
-        res.writeHead(200, {"Content-Type": "text/html"});
-        res.write(data);
-        console.log("connected!!!....");
-        res.end();
-    });
-}
+app.listen(settings.PORT);
 
 function routeSetting(req, res) {
     const pathname = url.parse(req.url).pathname;
-    const filename = path.basename(pathname);
-    console.log(pathname, filename, path.extname(pathname));
+    const  filename = path.basename(pathname);
     if (pathname === "/") {
         res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(fs.readFileSync(`${settings.ROOT}/index.html`, "utf-8"));
+        res.write(fs.readFileSync(`${settings.ROOT}/${settings.TOP_PAGE}`, "utf-8"));
         res.end();
         return;
     }
@@ -49,7 +34,6 @@ function routeSetting(req, res) {
             // res.writeHead(200, { "Content-Type": "image/png" });
             res.writeHead(200, { "Content-Type": `image/png; charset=utf-8` });
             res.write(fs.readFileSync(`${settings.ROOT}/assets/img/${filename}`, "binary"), "binary");
-            console.log(`${settings.ROOT}/assets/img/${filename}`);
             break;
         case ".mp3":
             res.writeHead(200, { "Content-Type": "sound/mp3" });
@@ -60,5 +44,3 @@ function routeSetting(req, res) {
     }
     res.end();
 }
-
-app.listen(settings.PORT);

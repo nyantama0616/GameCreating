@@ -19,7 +19,6 @@ function myShuffle(ary) {
 }
 
 let player;
-let bg;
 
 function preload() {
     Background.loadBGMS();
@@ -28,19 +27,14 @@ function preload() {
 
 function setup() {
     let screen = createCanvas(1280, 800);
+    Background.set();
     screen.parent("screen");
-    bg = new Background();
-
     player = new Player(490, 50);
-
 }
 
 function draw() {
     background(0);
-    bg.loopBGM();
-    // showMemory(180);
+    Background.loopBGM();
     player.draw();
-    // if (frameCount % 120 == 0) {
-    //     console.log(Background.BLOCK_DESTROY);
-    // }
+    // showMemory(180);
 }

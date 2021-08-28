@@ -1,0 +1,12 @@
+{
+    "name": "Tetris",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "start": "node server/server.js"
+    },
+    "engine": {
+        "node": "v14.17.x",
+        "npm": "7.20.x"
+    }
+}

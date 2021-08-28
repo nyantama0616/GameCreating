@@ -11,6 +11,12 @@ class Game {
         this.field = new Array(Game.H);
         this.fallSpeed = Game.DEFAULT_FALL_SPEED;
         this.top = Game.H - 1;
+        this.score = 0;
+        this.combo = 0;
+        this.scoreElement = $("#score");
+        this.comboElement = $("#combo");
+        this.timerElement = $("#timer");
+        this.timeLimit = 180; //タイムリミット３分
         this.variablesForGameOver = {
             isGameOver: false,
             red: 0
@@ -68,12 +74,32 @@ class Game {
         }
         
         let count = start - i;
-        if (count == 0) { return; }
+        if (count == 0) {
+            this.combo = 0;
+            this.reloadCombo();
+            return;
+        }
         for (let i = start; i >= this.top; i--) {
             this.shift(i, count);
         }
         this.top += count;
+        this.combo++;
+        this.score += this.combo * (Game.W - 2) * count * 100;
+        this.reloadCombo();
+        this.reloadScore();
         Background.BLOCK_DESTROY.play();
+    }
+
+    reloadScore() {
+        this.scoreElement.text(this.score);
+    }
+    
+    reloadCombo() {
+        this.comboElement.text(this.combo);
+    }
+    
+    reloadTimer() {
+        this.timerElement.text(this.timeLimit);
     }
 
     gameOver() {
@@ -106,11 +132,25 @@ class Game {
         }
         // return;
 
+        if (frameCount % 60 == 0) {
+            this.reloadTimer();
+            this.timeLimit--;
+        }
+        // タイムオーバー
+        if (this.timeLimit < 0) {
+            this.variablesForGameOver.isGameOver = true;
+            Background.pause();
+            Background.GAMEOVER.play();
+            return;
+        }
+
         // ここで不要になったactiveMinoの中身は開放されてるはず。。。
         if (!this.activeMino.isActive) {
             this.activeMino = Mino.createMino(Game.START_X, Game.START_Y, true, this);
             if (this.activeMino === null) {
                 this.variablesForGameOver.isGameOver = true;
+                Background.pause();
+                Background.GAMEOVER.play();
                 return;
             }
         }
