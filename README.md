@@ -1,2 +1,2 @@
 # GameCreating
-Tetlist: https://tetris-panda.herokuapp.com
+Tetris: https://tetris-panda.herokuapp.com
