@@ -1,12 +1,25 @@
 {
-    "name": "Tetris",
+    "name": "tetris",
     "version": "0.0.1",
     "private": true,
     "scripts": {
-        "start": "node server/server.js"
+        "start": "node server/main.js",
+        "minify": "node lib/minify.js -&"
     },
     "engine": {
         "node": "v14.17.x",
         "npm": "7.20.x"
+    },
+    "dependencies": {
+        "babel-preset-react-app": "^3.1.2",
+        "chokidar": "^3.5.2",
+        "gulp": "^4.0.2",
+        "gulp-concat": "^2.6.1",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "terser": "^5.7.2"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0"
     }
 }
