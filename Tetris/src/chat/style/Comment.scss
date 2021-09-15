@@ -1,0 +1,31 @@
+.comment {
+    list-style: none;
+    margin-bottom: 20px;
+    background-repeat: no-repeat;
+    border-radius: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation: add 1s linear 0s forwards;
+    opacity: 0;
+    transform: scale(0);
+    color: transparent;
+    
+    @keyframes add {
+        
+        100% {
+            color: rgb(41, 50, 51);
+            transform: scale(1);
+            opacity: 100%;
+        }
+    }
+
+    li {
+        p {
+            user-select: text;
+            line-height: 5px;
+        }
+    }
+
+}

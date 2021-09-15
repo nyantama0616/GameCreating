@@ -34,18 +34,50 @@ const extensions = {
     }
 }
 
+//一度読み込んだファイルはここに溜めて、再利用する。
+let fileCollection = {}
+
 exports.routeSetting = function (req, res) {
     const pathname = req.url;
     const filename = path.basename(pathname);
+
+    let extname;
+    let file;
     if (pathname === "/") {
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(fs.readFileSync(`${settings.ROOT}/${settings.TOP_PAGE}`, "utf-8"));
-        res.end();
-        return;
+        extname = "html";
+        file = `${settings.ROOT}/${settings.TOP_PAGE}`;
+    } else {
+        extname = path.extname(pathname).slice(1);
+        file = settings.ROOT + pathname;
+    
+        //拡張子なしの場合は、htmlファイルとみなす
+        if (!extname) {
+            extname = "html";
+            file += `.${extname}`;
+        }
     }
 
-    const ex = extensions[path.extname(pathname).slice(1)];
+    let data;
+    let ex = extensions[extname];
+    if (false) {
+    // 開発時はとりあえずfalseにしておく
+    // if (fileCollection[file]) {
+        data = fileCollection[file];
+    } else {
+        try {
+            data = fs.readFileSync(file, ex.encoding);
+        } catch (e) {
+            // ファイル読み込みに失敗した場合
+            console.log(e);
+            res.writeHead(400, { "Content-Type": "text/html" });
+            res.write(fs.readFileSync(`${settings.ROOT}/public/error.html`, "utf-8"), "utf-8");
+            res.end();
+            return;
+        }
+        fileCollection[file] = data;
+    }
+
     res.writeHead(200, { "Content-Type": ex.contentType });
-    res.write(fs.readFileSync(settings.ROOT + pathname, ex.encoding), ex.encoding);
+    res.write(data, ex.encoding);
     res.end();
 }
