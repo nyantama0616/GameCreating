@@ -2,6 +2,7 @@ html {
     height: 100%;
 }
 
+<<<<<<< HEAD
 body {
     height: 100%;
     margin: 0;
@@ -53,4 +54,25 @@ body {
 ::-webkit-scrollbar {
     width: 0px;
     height:0px;
+=======
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+//bodyはパゲパゲ
+body {
+    height: 100%;
+    margin: 0;
+
+    h1 {
+        color: green;
+    }
+}
+
+#chat {
+    width: 30%;
+    height: 30%;
+    background: blue;
+>>>>>>> 2f39905c0b311fb9cfd2555bcc302998d5a7f2ae
 }

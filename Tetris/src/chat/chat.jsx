@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 class Chat extends React.Component {
+<<<<<<< HEAD
     constructor() {
         super();
         this.state = {
@@ -166,6 +167,15 @@ class Chat extends React.Component {
             </div>
         );
     }
+=======
+    render() {
+        return (
+            <div id="chat">
+                <h1>hello....ll.</h1>
+            </div>
+        );
+    }    
+>>>>>>> 2f39905c0b311fb9cfd2555bcc302998d5a7f2ae
 }
 
 ReactDOM.render(

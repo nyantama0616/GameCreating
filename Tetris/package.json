@@ -29,7 +29,10 @@
         "@babel/preset-env": "^7.15.6",
         "babel-cli": "^6.26.0",
         "babel-loader": "^8.2.2",
+<<<<<<< HEAD
         "browser-sync": "^2.27.5",
+=======
+>>>>>>> 2f39905c0b311fb9cfd2555bcc302998d5a7f2ae
         "gulp": "^4.0.2",
         "gulp-babel": "^8.0.0",
         "gulp-browserify": "^0.5.1",
