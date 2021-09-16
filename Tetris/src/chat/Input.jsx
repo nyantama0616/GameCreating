@@ -1,5 +1,4 @@
 function Input(props) {
-    const textarea = React.useRef(null);
     return (
         <div id="input-container" className={props.isActive ? "active" : ""}>
             <form id="input" autoFocus={true} onKeyDown={props.enterPost}>

@@ -2,59 +2,6 @@ html {
     height: 100%;
 }
 
-<<<<<<< HEAD
-body {
-    height: 100%;
-    margin: 0;
-    background-color: rgb(179, 174, 174);
-}
-
-#root {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#chat {
-    user-select: none;
-    height: 95%;
-    width: 80%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    #chat-space {
-        position: relative;
-        width: 600px;
-        height: 830px;
-        min-width: 600px;
-        min-height: 830px;
-        background-color: rgb(158, 201, 238);
-        border-radius: 10px;
-
-        #comments-container {
-            overflow-x: scroll;
-            
-            width: 100%;
-            max-height: 85%;
-
-            // オートスクロール用に、常にコメントの最下位に位置する
-            #comments-bottom {
-                width: 0px;
-                height: 200px;
-            }
-        }
-    }
-}
-
-
-// なんか外に書いたら効いた
-::-webkit-scrollbar {
-    width: 0px;
-    height:0px;
-=======
 #root {
     width: 100%;
     height: 100%;
@@ -74,5 +21,4 @@ body {
     width: 30%;
     height: 30%;
     background: blue;
->>>>>>> 2f39905c0b311fb9cfd2555bcc302998d5a7f2ae
 }

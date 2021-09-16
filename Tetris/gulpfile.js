@@ -5,21 +5,13 @@ let gulp = require("gulp"),
     browserify = require("gulp-browserify"),
     uglify = require("gulp-uglify"),
     sass = require("gulp-sass")(require("node-sass")),
-<<<<<<< HEAD
     browserSync = require("browser-sync"),
-=======
->>>>>>> 2f39905c0b311fb9cfd2555bcc302998d5a7f2ae
     exec = require('child_process').exec
     fs = require("fs"),
     path = require("path");
     log = console.log.bind(console);
-<<<<<<< HEAD
  
 // jsファイルを結合、圧縮
-=======
-
-    
->>>>>>> 2f39905c0b311fb9cfd2555bcc302998d5a7f2ae
 function compressJS(pathname) {
     let dir = path.dirname(pathname);
     let dirname = path.basename(dir);
@@ -30,10 +22,7 @@ function compressJS(pathname) {
     .pipe(gulp.dest("dest/"));
 }
 
-<<<<<<< HEAD
 // jsxファイルを結合、トランスパイル、圧縮
-=======
->>>>>>> 2f39905c0b311fb9cfd2555bcc302998d5a7f2ae
 function compileAndCompressJSX(pathname) {
     let dir = path.dirname(pathname);
     let dirname = path.basename(dir);
@@ -42,15 +31,12 @@ function compileAndCompressJSX(pathname) {
         .pipe(concat(`${dirname}.min.js`))
         .pipe(babel())
         .on('error', console.error.bind(console))
-        .pipe(browserify())
+        // .pipe(browserify())
         .pipe(uglify())
         .pipe(gulp.dest("dest/"));
 }
 
-<<<<<<< HEAD
 //scssファイルを結合、コンパイル
-=======
->>>>>>> 2f39905c0b311fb9cfd2555bcc302998d5a7f2ae
 function compileSass(pathname) {
     let style = path.dirname(pathname);
     let dir = path.dirname(style);
@@ -63,10 +49,7 @@ function compileSass(pathname) {
 }
 
 gulp.task("watch", (done) => {
-<<<<<<< HEAD
-=======
 
->>>>>>> 2f39905c0b311fb9cfd2555bcc302998d5a7f2ae
     watch("src", (info) => {
         pathname = info.history[0];
         ex = path.extname(pathname).slice(1);
@@ -85,7 +68,6 @@ gulp.task("watch", (done) => {
                 break;
         }
     });
-<<<<<<< HEAD
 
     //リロード用
     browserSync.init({
@@ -100,8 +82,6 @@ gulp.task("watch", (done) => {
     });
     //
 
-=======
->>>>>>> 2f39905c0b311fb9cfd2555bcc302998d5a7f2ae
     done();
 });
 
