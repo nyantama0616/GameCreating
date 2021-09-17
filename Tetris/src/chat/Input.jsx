@@ -1,9 +1,11 @@
 function Input(props) {
+    let className = "input-container";
+    if (props.isActive) className += " active";
     return (
-        <div id="input-container" className={props.isActive ? "active" : ""}>
-            <form id="input" autoFocus={true} onKeyDown={props.enterPost}>
-                <textarea value={props.params.value.join("")} ref={props.textarea} rows={props.params.row} wrap="hard" onChange={props.update}></textarea>
-                <input type="submit" value="送信" title="ctrl+Enter" onClick={props.addComment}></input>
+        <div className={className}>
+            <form className="input" onKeyDown={props.handleKeyDown}>
+                <textarea value={props.params.value.join("")} ref={props.textarea} rows={props.params.row} wrap="hard" onChange={props.handleChange}></textarea>
+                <input type="submit" value={props.buttonValue} title="ctrl+Enter" onClick={props.handleClick}></input>
             </form>
         </div>
     );

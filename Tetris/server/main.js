@@ -2,17 +2,11 @@
 
 const http = require("http"),
     router = require("./router"),
-    socket = require("socket.io"),
-    Mylib = require("./mylib");
+    Socket = require("./socket");
 
 let app = http.createServer(router.routeSetting),
-    settings = require("./settings"),
-    io = socket(app);
+    settings = require("./settings");
 
-require("./socket");
-io.sockets.on("connection", socket => {
-    socket.on("addCommentRequest", data => { io.sockets.emit("addCommentResponse", data); });
-    // socket.on("generateIDRequest", data => { io.sockets.emit("generateIDResponse", { id: Mylib.generateID(data.usedID) }) });
-});
-
+    
 app.listen(settings.PORT);
+Socket.run(app);

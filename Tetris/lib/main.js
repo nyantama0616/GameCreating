@@ -1,2 +1,15 @@
-let [x, y] = [2, 2];
-console.log(x, y);
+class Hello {
+
+}
+
+class Panda {
+    static hoge() {
+        console.log(Hello);
+        console.log(Animal);
+    }
+}
+Panda.hoge();
+
+function Animal() {
+    
+}

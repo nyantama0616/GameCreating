@@ -27,6 +27,13 @@ function compileAndCompressJSX(pathname) {
     let dir = path.dirname(pathname);
     let dirname = path.basename(dir);
     let files = fs.readdirSync(dir).filter(file => fs.statSync(`${dir}/${file}`).isFile());
+
+    // "App.jsxを最後尾にもってくる"
+    let len = files.length;
+    let i = files.indexOf("App.jsx");
+    [files[i], files[len - 1]] = [files[len - 1], files[i]];
+    //
+
     gulp.src(files.map(file => `${dir}/${file}`))
         .pipe(concat(`${dirname}.min.js`))
         .pipe(babel())
@@ -69,17 +76,17 @@ gulp.task("watch", (done) => {
         }
     });
 
-    //リロード用
-    browserSync.init({
-        server: {
-            baseDir: './',
-            index: 'public/chat.html',
-        },
-    });
+    //リロード用(一旦止めとく)
+    // browserSync.init({
+    //     server: {
+    //         baseDir: './',
+    //         index: 'public/chat.html',
+    //     },
+    // });
 
-    watch("dest", (info) => {
-            browserSync.reload();
-    });
+    // watch("dest", (info) => {
+    //         browserSync.reload();
+    // });
     //
 
     done();

@@ -4,6 +4,7 @@ function Comment(props) {
             <li>
                 {props.value.map((line, i) => <p key={i}>{line}</p>)}
             </li>
+            {props.user}
         </div>
     );
 }

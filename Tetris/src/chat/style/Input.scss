@@ -1,4 +1,4 @@
-#input-container {
+.input-container {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -12,7 +12,7 @@
     border-radius: 10px;
     box-shadow: 0 0 2px rgb(91, 135, 172);
     box-shadow: 0 0 4px rgb(91, 135, 172);
-    #input {
+    .input {
         textarea {
             background-color: rgb(224, 228, 240);
             resize: none;

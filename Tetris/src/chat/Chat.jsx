@@ -1,13 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import io from "socket.io-client";
-
-
 class Chat extends React.Component {
     constructor() {
         super();
 
-        this.usedID = {};
+        this.socket = io("localhost:5000");
+
+        this.usedCommentID = {};
         
         this.state = {
             comments: [],
@@ -15,18 +12,37 @@ class Chat extends React.Component {
                 value: [""],
                 row: 1,
             },
-            isActive: false
+            isActive: false,
+            user: null
         }
 
+        this.createUser = this.createUser.bind(this);
         this.updateInput = this.updateInput.bind(this);
         this.addComment = this.addComment.bind(this);
         this.enterPost = this.enterPost.bind(this);
+        this.handleClickWindow = this.handleClickWindow.bind(this);
 
         // refs
         this.textarea = React.createRef();
         this.commentsBottom = React.createRef();
+    }
 
-        this.socket = io("localhost:5000");
+    createUser(name, img, pattern) {
+        if (this.state.user) return;
+
+        let id;
+        this.socket.emit("createUserRequest");
+        this.socket.on("createUserResponse", data => {
+            id = data.users[data.id].id;
+            this.setState({
+                user: {
+                    id: id,
+                    img: img,
+                    name: name,
+                    pattern: pattern
+                }
+            });
+        });
     }
 
     // 空白だけとかのコメントは送れらん
@@ -36,8 +52,8 @@ class Chat extends React.Component {
         return judge;
     }
 
-    static generateComment(value, id) {
-        let img = `url(../assets/img/chat/cloud${Mylib.rand(0, 5)}.png)`;
+    static generateComment(value, id, user) {
+        let img = `url(../assets/img/chat/cloud/cloud${Mylib.rand(0, 5)}.png)`;
 
         // コメントのサイズを決める
         let width = 0;
@@ -46,10 +62,10 @@ class Chat extends React.Component {
             width = Math.max(width, Mylib.charCount(str));
         });
         width *= 20;
-        width = Math.max(width, 100);
+        width = Math.max(width, 120);
         width = Math.min(width, 380);
         height = width * (100 / 280) * (value.length / 3) * 1.5;
-        height = Math.max(height, 70);
+        height = Math.max(height, 100);
         //
 
         let marginLeft = `${Mylib.rand(-60, 200)}px`;
@@ -61,7 +77,7 @@ class Chat extends React.Component {
             backgroundImage: img
         }
 
-        return <Comment key={id} value={value} style={style}/>
+        return <Comment key={id} value={value} style={style} user={user}/>
     }
 
     // ctrl+Enterでコメントを送信できる
@@ -74,11 +90,12 @@ class Chat extends React.Component {
     // "addCommentRequest"イベントで渡す関数
     refrectComment(data) {
         let value = data.value;
-        let id = Mylib.generateID(this.usedID);
-        let comment = Chat.generateComment(value, id);
+        let id = Mylib.generateID(this.usedCommentID);
+        let userParams = data.user;
+        let user = <User id={userParams.id} img={userParams.img} name={userParams.name} pattern={userParams.pattern}/>
+        let comment = Chat.generateComment(value, id, user);
         let comments = this.state.comments
         comments.push(comment);
-
 
         this.setState({
             comments: comments
@@ -93,7 +110,10 @@ class Chat extends React.Component {
         e.preventDefault();
         let value = this.state.input.value;
         if (!Chat.validation(value)) return;
-        this.socket.emit("addCommentRequest", { value: value });
+        this.socket.emit("addCommentRequest", {
+            value: value,
+            user: this.state.user
+        });
 
         this.setState({
             input: {
@@ -142,22 +162,26 @@ class Chat extends React.Component {
         });
     }
 
+    handleClickWindow(e) {
+        let target = e.target;
+        if (this.state.user && (target.className === "input-container" || target.parentNode.className === "input")) {
+            this.activateInput();
+            this.textarea.current.focus();
+        } else {
+            this.activateInput(false);
+        }
+    }
+
     componentDidMount() {
+        // this.createUser("panda", "../assets/img/chat/user/user4.png", 1);
         this.socket.on("addCommentResponse", data => { this.refrectComment(data) });
     }
 
     render() {
         return (
-            <div id="chat" onClick={(e) => {
-                let target = e.target;
-                if (target.id === "input-container" || target.parentNode.id === "input") {
-                    this.activateInput();
-                    this.textarea.current.focus();
-                } else {
-                    this.activateInput(false);
-                }
-            }}>
-                <div id="chat-space">
+            <div id="chat" onClick={this.handleClickWindow}>
+                <UserSelect user={this.state.user} createUser={this.createUser}/>
+                <div id="chat-space" style={{ pointerEvents: this.state.user ? "all" : "none" }}> {/*ユーザーが設定されるまでは、クリックできない*/}
                     <div id="comments-container">
                         <ul>
                             {this.state.comments}
@@ -165,22 +189,17 @@ class Chat extends React.Component {
                         <div ref={this.commentsBottom }id="comments-bottom"></div>
                     </div>
                     <Input
-                        textarea={this.textarea}
                         params={this.state.input}
+                        textarea={this.textarea}
                         isActive={this.state.isActive}
-                        update={this.updateInput}
-                        addComment={this.addComment}
-                        enterPost={this.enterPost}
+                        handleChange={this.updateInput}
+                        handleClick={this.addComment}
+                        handleKeyDown={this.enterPost}
+                        buttonValue="送信"
                     />
+                    {this.state.user ? null : <div id="chat-mask"></div>} {/*マスク*/}
                 </div>
             </div>
         );
     }
 }
-
-ReactDOM.render(
-    <React.StrictMode>
-        <Chat/>
-    </React.StrictMode>,
-    document.getElementById('root')
-);
