@@ -2,6 +2,7 @@ class Block {
     static L = 20;
 
     constructor(x, y, pattern = 0) {
+        console.log(Block.L);
         this.x = x;
         this.y = y;
         this.design = Pattern.DESINGS[pattern]; //ブロックを装飾する画像

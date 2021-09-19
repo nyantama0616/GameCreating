@@ -53,7 +53,7 @@ class UserSelect extends React.Component {
         super(props);
         this.state = {
             mode: 0,
-            guide: "なまえをきめてね!!",
+            guide: "キャラクターをえらんでね!",
             img: null,
             pattern: null,
             nameInput: {
@@ -111,7 +111,7 @@ class UserSelect extends React.Component {
             img: img,
             pattern: pattern,
             mode: 1,
-            guide: "なまえをきめてね!"
+            guide: "なまえをきめてね!!"
         });
     }
 
@@ -129,6 +129,9 @@ class UserSelect extends React.Component {
         if (!Chat.validation(value)) return;
 
         this.props.createUser(value[0], this.state.img, this.state.pattern);
+        document.cookie = `name=${value[0]}`
+        document.cookie = `img=${this.state.img}`
+        document.cookie = `pattern=${this.state.pattern}`
     }
     
     activateInput(flag = true) {

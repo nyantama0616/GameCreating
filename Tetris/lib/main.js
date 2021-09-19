@@ -1,15 +1,3 @@
-class Hello {
-
-}
-
-class Panda {
-    static hoge() {
-        console.log(Hello);
-        console.log(Animal);
-    }
-}
-Panda.hoge();
-
-function Animal() {
-    
-}
+let path = require("path");
+let url = "padna.js";
+console.log(path.dirname(url));

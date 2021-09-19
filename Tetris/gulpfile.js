@@ -28,7 +28,7 @@ function compileAndCompressJSX(pathname) {
     let dirname = path.basename(dir);
     let files = fs.readdirSync(dir).filter(file => fs.statSync(`${dir}/${file}`).isFile());
 
-    // "App.jsxを最後尾にもってくる"
+    // "App.jsx"を最後尾にもってくる
     let len = files.length;
     let i = files.indexOf("App.jsx");
     [files[i], files[len - 1]] = [files[len - 1], files[i]];
@@ -84,9 +84,16 @@ gulp.task("watch", (done) => {
     //     },
     // });
 
-    // watch("dest", (info) => {
-    //         browserSync.reload();
-    // });
+    watch("dest", (info) => {
+        // let pathname = info.history[0];
+        // let ex = path.extname(pathname).slice(1);
+        // if (ex === "js") {
+        //     gulp.src(pathname)
+        //         .pipe(uglify())
+        //         .pipe(gulp.dest("dest/"));
+        // }
+        // browserSync.reload();
+    });
     //
 
     done();

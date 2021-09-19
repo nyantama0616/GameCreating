@@ -2,15 +2,13 @@ class Chat extends React.Component {
     constructor() {
         super();
 
-        this.socket = io("localhost:5000");
-
         this.usedCommentID = {};
         
         this.state = {
             comments: [],
             input: {
                 value: [""],
-                row: 1,
+                row: 1
             },
             isActive: false,
             user: null
@@ -31,8 +29,8 @@ class Chat extends React.Component {
         if (this.state.user) return;
 
         let id;
-        this.socket.emit("createUserRequest");
-        this.socket.on("createUserResponse", data => {
+        Manager.socket.emit("createUserRequest");
+        Manager.socket.on("createUserResponse", data => {
             id = data.users[data.id].id;
             this.setState({
                 user: {
@@ -110,7 +108,7 @@ class Chat extends React.Component {
         e.preventDefault();
         let value = this.state.input.value;
         if (!Chat.validation(value)) return;
-        this.socket.emit("addCommentRequest", {
+        Manager.socket.emit("addCommentRequest", {
             value: value,
             user: this.state.user
         });
@@ -118,42 +116,41 @@ class Chat extends React.Component {
         this.setState({
             input: {
                 value: [""],
-                row: 1
+                row: 1,
             }
         });
     }
 
-    // スパゲティ
+    // textareaの値を更新する（スパゲティ)
     updateInput(e) {
-        let row = this.state.input.row;
         let value = Mylib.split(e.target.value, "\n");
-        value[row - 1] ||= ""
-        let isAdded = value[row - 1].length > this.state.input.value[row - 1].length;
-
-        if (isAdded && e.target.value.slice(-1) === "\n") {
-            if (row === 3) return;
-            value.push("");
-            row++;
-        } else if (Mylib.charCount(value[row - 1]) > 30) { //ここで一行あたりの文字数制限
-            if (row === 3) return;
-
-            let target = value[row - 1].split("");
-            let temp = target.slice(-1);
-            target[target.length - 1] = "\n";
-            value[row - 1] = target.join("");
+        value[0] ||= "";
+        let v_len = value.length;
+        let target = value[v_len - 1];
+        let t_len = target.length;
+        let isAdded = e.target.value.length > this.state.input.value.join("").length
+        if (Mylib.charCount(target) > 30) {
+            let temp = target[t_len - 1];
+            if (temp === "\n") temp = "";
+            value[v_len - 1] = value[v_len - 1].slice(0, -1) + "\n";
             value.push(temp);
-            row++;
-        } else if (row > 1 && !isAdded && !value[row - 1] && value[row - 2].slice(-1) !== "\n") {
-            value.pop();
-            row--;
-        } 
-
+        }
+        let row = v_len;
+        if (row > 3 || isAdded && row === 3 && value[2].slice(-1) === "\n") return;
+        if (value[row - 1].slice(-1) === "\n") {
+            if (isAdded) {
+                row++;
+            } else {
+                value.pop();
+                row--;
+            }
+        }
         this.setState({
             input: {
                 value: value,
                 row: row
             }
-        });
+        })
     }
 
     activateInput(flag = true) {
@@ -163,6 +160,8 @@ class Chat extends React.Component {
     }
 
     handleClickWindow(e) {
+        console.log(document.cookie);
+        console.log(Manager.getCookie());
         let target = e.target;
         if (this.state.user && (target.className === "input-container" || target.parentNode.className === "input")) {
             this.activateInput();
@@ -173,8 +172,12 @@ class Chat extends React.Component {
     }
 
     componentDidMount() {
-        // this.createUser("panda", "../assets/img/chat/user/user4.png", 1);
-        this.socket.on("addCommentResponse", data => { this.refrectComment(data) });
+        console.log("name: ", document.cookie.name)
+        // let cookie = Manager.getCookie();
+        // if (cookie.name && cookie.img && cookie.pattern) {
+        //     this.createUser(cookie.name, cookie.img, cookie.pattern);
+        // }
+        Manager.socket.on("addCommentResponse", data => { this.refrectComment(data) });
     }
 
     render() {

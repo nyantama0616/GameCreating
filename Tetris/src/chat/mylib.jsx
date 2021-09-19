@@ -3,7 +3,7 @@ class Mylib {
     static charCount(str) {
         let count = 0;
         for (let i = 0; i < str.length; i++) {
-            if (str.match(/^[\u30a0-\u30ff\u3040-\u309f\u3005-\u3006\u30e0-\u9fcf]+$/)) {
+            if (str[i].match(/^[\u30a0-\u30ff\u3040-\u309f\u3005-\u3006\u30e0-\u9fcf]+$/)) {
                 count += 2
             } else {
                 count += 1

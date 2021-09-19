@@ -2,6 +2,10 @@
 
 let player;
 
+window.addEventListener("click", () => {
+    console.log(document.cookie);
+});
+
 function preload() {
     // Background.loadBGMS(); //BGM用の音楽読み込み
     Pattern.setDesign(); //ブロック用の画像読み込み

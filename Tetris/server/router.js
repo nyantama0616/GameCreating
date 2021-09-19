@@ -39,7 +39,6 @@ let fileCollection = {}
 
 exports.routeSetting = function (req, res) {
     const pathname = req.url;
-    const filename = path.basename(pathname);
 
     let extname;
     let file;
@@ -48,7 +47,13 @@ exports.routeSetting = function (req, res) {
         file = `${settings.ROOT}/${settings.TOP_PAGE}`;
     } else {
         extname = path.extname(pathname).slice(1);
-        file = settings.ROOT + pathname;
+
+        // 親ディレクトリなしの場合はpublicから探す
+        if (path.dirname(pathname) === "/") {
+            file = settings.ROOT + "/public" + pathname;
+        } else {
+            file =  settings.ROOT + pathname;
+        }
     
         //拡張子なしの場合は、htmlファイルとみなす
         if (!extname) {
@@ -59,9 +64,11 @@ exports.routeSetting = function (req, res) {
 
     let data;
     let ex = extensions[extname];
-    if (false) {
+    
     // 開発時はとりあえずfalseにしておく
+    if (false) {
     // if (fileCollection[file]) {
+        console.log("find!");
         data = fileCollection[file];
     } else {
         try {
