@@ -77,7 +77,7 @@ class Game {
         let count = start - i;
         if (count == 0) {
             this.combo = 0;
-            this.reloadCombo();
+            this.updateCombo();
             return;
         }
         for (let i = start; i >= this.top; i--) {
@@ -86,18 +86,18 @@ class Game {
         this.top += count;
         this.combo++;
         this.score += this.combo * (Game.W - 2) * count * 100;
-        this.reloadCombo();
-        this.reloadScore();
+        this.updateScore();
+        this.updateCombo();
         Background.BLOCK_DESTROY.play();
     }
 
     // 画面上のスコアを更新
-    reloadScore() {
+    updateScore() {
         this.scoreElement.text(this.score);
     }
     
     // 画面上のコンボを更新
-    reloadCombo() {
+    updateCombo() {
         this.comboElement.text(this.combo);
     }
     

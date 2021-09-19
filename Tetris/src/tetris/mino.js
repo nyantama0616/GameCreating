@@ -1,10 +1,3 @@
-/* TODO:
-    function judgeLeft(field)といった記述を
-    geme.judgeLeft(this)のように修正。
-    P.S.
-    と思ったけど、やっぱりこのままでもいいかも？
-*/
-
 class Mino {
     static NUM = 4;
     

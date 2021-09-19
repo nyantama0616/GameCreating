@@ -2,7 +2,6 @@ class Block {
     static L = 20;
 
     constructor(x, y, pattern = 0) {
-        console.log(Block.L);
         this.x = x;
         this.y = y;
         this.design = Pattern.DESINGS[pattern]; //ブロックを装飾する画像
@@ -10,6 +9,12 @@ class Block {
         this.isLocked = false; //ブロックが固定されるかどうか(アクティブなミノ以外のブロックは全て固定されている。)
         Object.seal(this);
     }
+
+    // マルチ用メソッド
+    getParam() {
+        return [this.design, this.lit]
+    }
+    //
 
     getLit() {
         return this.lit;
