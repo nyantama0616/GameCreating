@@ -5,7 +5,8 @@ class Game {
     static START_Y = 1; //ミノ生成時の座標Y
     static DEFAULT_FALL_SPEED = 30; //ミノが落下するスピード
     
-    constructor(x, y) {
+    constructor(p, x, y) {
+        this.p = p;
         this.x = x;
         this.y = y;
         this.field = new Array(Game.H);
@@ -13,18 +14,25 @@ class Game {
         this.top = Game.H - 1;
         this.score = 0;
         this.combo = 0;
-        this.scoreElement = $("#score");
-        this.comboElement = $("#combo");
-        this.timerElement = $("#timer");
+        this.scoreX = x - 312;
+        this.scoreY = y - 2;
+        this.timerX = x + 456;
+        this.timerY = y + 100;
         this.timeLimit = 180; //タイムリミット３分
         this.variablesForGameOver = {
             isGameOver: false,
             red: 0
         };
+
+        // スコア用のテキスト設定
+        this.p.textSize(35);
+        this.p.textAlign(this.p.RIGHT);
+        this.p.fill(255);
+
         for (let i = 0; i < Game.H; i++) {
             this.field[i] = new Array();
             for (let j = 0; j < Game.W; j++) {
-                let block = new Block(this.x + j * Block.L + 2 * j, this.y + i * Block.L + 2 * i, Pattern.NUM);
+                let block = new Block(p, this.x + j * Block.L + 2 * j, this.y + i * Block.L + 2 * i, Pattern.NUM);
                 if (i == Game.H - 1 || j == 0 || j == Game.W - 1) {
                     block.setLit(true);
                     block.setIsLocked(true);
@@ -32,8 +40,7 @@ class Game {
                 this.field[i].push(block);
             }
         }
-        this.activeMino = Mino.createMino(Game.START_X, Game.START_Y, true, this); //色々あってコンストラクタの最後にミノ作成
-        Object.seal(this);
+        this.activeMino = Mino.createMino(p, Game.START_X, Game.START_Y, true, this); //色々あってコンストラクタの最後にミノ作成
     }
 
     getBlock(i, j) {
@@ -49,7 +56,6 @@ class Game {
                 line2[j].clone(line1[j]);
             }
         } else {
-            console.log("i - d <= 0", i, d);
             let line = this.field[i];
             for (let j = 1; j < Game.W - 1; j++) {
                 line[j].setLit(false);
@@ -77,7 +83,6 @@ class Game {
         let count = start - i;
         if (count == 0) {
             this.combo = 0;
-            this.updateCombo();
             return;
         }
         for (let i = start; i >= this.top; i--) {
@@ -86,32 +91,45 @@ class Game {
         this.top += count;
         this.combo++;
         this.score += this.combo * (Game.W - 2) * count * 100;
-        this.updateScore();
-        this.updateCombo();
         Background.BLOCK_DESTROY.play();
-    }
-
-    // 画面上のスコアを更新
-    updateScore() {
-        this.scoreElement.text(this.score);
-    }
-    
-    // 画面上のコンボを更新
-    updateCombo() {
-        this.comboElement.text(this.combo);
     }
     
     // 画面上の制限時間を更新
-    reloadTimer() {
-        this.timerElement.text(this.timeLimit);
+    updateTimer() {
+        if (this.p.frameCount % 60 === 0) {
+            this.timeLimit--;
+        }
+    }
+
+    showScoreBoad() {
+        this.p.image(Pattern.scoreBoad, this.scoreX, this.scoreY);
+        this.p.text(this.score, this.scoreX + 300, this.scoreY + 50);
+        this.p.text(this.combo, this.scoreX + 300, this.scoreY + 118);
+    }
+
+    showTimer() {
+        this.p.push();
+        this.p.textSize(60);
+        this.p.fill(this.p.color(61, 61, 243));
+        this.p.text(this.timeLimit, this.timerX, this.timerY);
+        this.p.pop();
+    }
+
+    setGameOver() {
+        this.variablesForGameOver.isGameOver = true;
+        Background.pause();
+        Background.GAMEOVER.play();
     }
 
     //ゲームオーバー画面を表示
     gameOver() {
-        textSize(50);
-        fill(this.variablesForGameOver.red, 0, 0);
+        this.p.push();
+        this.p.textSize(50);
+        this.p.textAlign(this.p.LEFT);
+        this.p.fill(this.variablesForGameOver.red, 0, 0);
         this.variablesForGameOver.red++;
-        text("Game Over", this.x + 26, this.y + 350);
+        this.p.text("Game Over", this.x + 26, this.y + 350);
+        this.p.pop();
         for (let i = 0; i < Game.H; i++) {
             this.field[i][0].draw();
         }
@@ -125,7 +143,11 @@ class Game {
         }
     }
 
+
     draw() {
+        this.showScoreBoad();
+        this.showTimer();
+
         if (this.variablesForGameOver.isGameOver) {
             this.gameOver();
             return;
@@ -138,39 +160,23 @@ class Game {
             }
         }
 
-        if (frameCount % 60 == 0) {
-            this.reloadTimer();
-            this.timeLimit--;
-        }
+        this.updateTimer();
+
         // タイムオーバー
-        if (this.timeLimit < 0) {
-            this.variablesForGameOver.isGameOver = true;
-            Background.pause();
-            Background.GAMEOVER.play();
+        if (this.timeLimit <= 0) {
+            this.setGameOver();
             return;
         }
 
         // ここで不要になったactiveMinoの中身は開放されてるはず。。。
         if (!this.activeMino.isActive) {
-            this.activeMino = Mino.createMino(Game.START_X, Game.START_Y, true, this);
+            this.activeMino = Mino.createMino(this.p, Game.START_X, Game.START_Y, true, this);
             if (this.activeMino === null) {
-                this.variablesForGameOver.isGameOver = true;
-                Background.pause();
-                Background.GAMEOVER.play();
+                this.setGameOver();
                 return;
             }
         }
 
         this.activeMino.draw(this);
-    }
-
-    // this.fieldを行列の形で表示
-    showField() {
-        for (let i = 0; i < Game.H; i++) {
-            let temp = this.field[i].map((block) => {
-                return Number(block.getLit());
-            });
-            console.log(temp.toString());
-        }
     }
 }

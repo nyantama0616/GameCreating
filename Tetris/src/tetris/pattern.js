@@ -12,10 +12,11 @@ class Pattern {
     ];
 
     static DESINGS = new Array(Pattern.NUM + 1);
-    static setDesign() {
+    static setDesign(p) {
         for (let i = 0; i < Pattern.NUM + 1; i++) {
-            Pattern.DESINGS[i] = loadImage(`assets/img/tetris/pattern${i}.png`);
+            Pattern.DESINGS[i] = p.loadImage(`assets/img/tetris/pattern${i}.png`);
         }
+        Pattern.scoreBoad = p.loadImage("assets/img/tetris/score_boad.png");
     }
 
 }

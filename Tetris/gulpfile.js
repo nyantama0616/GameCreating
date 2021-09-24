@@ -16,10 +16,22 @@ function compressJS(pathname) {
     let dir = path.dirname(pathname);
     let dirname = path.basename(dir);
     let files = fs.readdirSync(dir).filter(file => fs.statSync(`${dir}/${file}`).isFile());
+
+    // "first.js"を最初にもってくる
+    let i = files.indexOf("first.js");
+    if (i >= 0) [files[i], files[0]] = [files[0], files[i]];
+    //
+    
+    // "main.js"を最後尾にもってくる
+    let len = files.length;
+    i = files.indexOf("main.js");
+    if (i >= 0) [files[i], files[len - 1]] = [files[len - 1], files[i]];
+    //
+
     gulp.src(files.map(file => `${dir}/${file}`))
     .pipe(concat(`${dirname}.min.js`))
-    .pipe(uglify())
-    .pipe(gulp.dest("dest/"));
+    // .pipe(uglify())
+    .pipe(gulp.dest("dest/js"));
 }
 
 // jsxファイルを結合、トランスパイル、圧縮
@@ -31,7 +43,7 @@ function compileAndCompressJSX(pathname) {
     // "App.jsx"を最後尾にもってくる
     let len = files.length;
     let i = files.indexOf("App.jsx");
-    [files[i], files[len - 1]] = [files[len - 1], files[i]];
+    if (i >= 0) [files[i], files[len - 1]] = [files[len - 1], files[i]];
     //
 
     gulp.src(files.map(file => `${dir}/${file}`))
@@ -39,8 +51,8 @@ function compileAndCompressJSX(pathname) {
         .pipe(babel())
         .on('error', console.error.bind(console))
         // .pipe(browserify())
-        .pipe(uglify())
-        .pipe(gulp.dest("dest/"));
+        // .pipe(uglify())
+        .pipe(gulp.dest("dest/js"));
 }
 
 //scssファイルを結合、コンパイル
@@ -52,7 +64,7 @@ function compileSass(pathname) {
     gulp.src(files.map(file => `${style}/${file}`))
         .pipe(concat(`${dirname}.min.css`))
         .pipe(sass({outputStyle: "compressed"}))
-        .pipe(gulp.dest("dest/"));
+        .pipe(gulp.dest("dest/css"));
 }
 
 gulp.task("watch", (done) => {

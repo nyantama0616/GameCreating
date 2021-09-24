@@ -1,7 +1,8 @@
 class Mino {
     static NUM = 4;
     
-    constructor(x, y, pattern, isActive) {
+    constructor(p, x, y, pattern, isActive) {
+        this.p = p;
         this.x = x;
         this.y = y;
         this.pattern = pattern; //デザイン
@@ -13,9 +14,9 @@ class Mino {
     }
 
     // ランダムな種類のミノを一つ生成
-    static createMino(x, y, isActive, game) {
+    static createMino(p, x, y, isActive, game) {
         let pattern = Math.floor(Math.random() * Pattern.NUM);
-        let mino = new Mino(x, y, pattern, isActive);
+        let mino = new Mino(p, x, y, pattern, isActive);
         if (mino.blocks.some(m => game.getBlock(m[1], m[0]).getIsLocked())) {
             mino = null;
         }
@@ -112,7 +113,7 @@ class Mino {
                         d--;
                         temp++;
                     }
-                    overBottom = max(overBottom, temp);
+                    overBottom = this.p.max(overBottom, temp);
                 }
 
             }
@@ -150,7 +151,7 @@ class Mino {
                         d--;
                         temp++;
                     }
-                    overBottom = max(overBottom, temp);
+                    overBottom = this.p.max(overBottom, temp);
                 }
             }
 
@@ -164,7 +165,6 @@ class Mino {
             } else {
                 console.error(e);
             }
-                
         }
     }
 
@@ -176,10 +176,10 @@ class Mino {
             let m = this.blocks[i];
             field[m[1]][m[0]].setLit(true);
             field[m[1]][m[0]].setIsLocked(true);
-            top = min(top, m[1]);
+            top = this.p.min(top, m[1]);
         }
         this.isActive = false;
-        game.top = min(game.top, top);
+        game.top = this.p.min(game.top, top);
     }
     
     draw(game) {
@@ -187,15 +187,15 @@ class Mino {
         if (!this.isActive) {
             return;
         }
-        if (this.judgeBottom(field) && frameCount % 30 == 0) {
+        if (this.judgeBottom(field) && this.p.frameCount % 30 == 0) {
             this.lock(game);
             game.breakOut();
             return;
         }
         
         // キーボード ["j", "k", "l", "a", "d"] でミノを操作
-        if (keyIsPressed && frameCount % 6 == 0) {
-            switch (key) {
+        if (this.p.keyIsPressed && this.p.frameCount % 6 == 0) {
+            switch (this.p.key) {
                 case "j": //左に1マス移動
                     this.moveLeft(field);
                     break
@@ -217,7 +217,7 @@ class Mino {
         }
 
         //game.fallSpeedミリ秒おきに下に移動
-        if (frameCount % game.fallSpeed === 0) {
+        if (this.p.frameCount % game.fallSpeed === 0) {
             this.moveDown(field);
         }
 
@@ -225,7 +225,7 @@ class Mino {
         for (let i = 0; i < Mino.NUM; i++) {
             let m = this.blocks[i]
             let block = field[m[1]][m[0]]
-            block.setDesign(Pattern.DESINGS[this.pattern]);
+            block.setDesign(this.pattern);
             block.setLit(true);
         }
     }

@@ -11,7 +11,7 @@ class Chat extends React.Component {
                 row: 1
             },
             isActive: false,
-            user: null
+            user: false
         }
 
         this.createUser = this.createUser.bind(this);
@@ -25,20 +25,22 @@ class Chat extends React.Component {
         this.commentsBottom = React.createRef();
     }
 
-    createUser(name, img, pattern) {
+    createUser(name, img, pattern, keyWord) {
         if (this.state.user) return;
-
-        let id;
         Manager.socket.emit("createUserRequest");
         Manager.socket.on("createUserResponse", data => {
-            id = data.users[data.id].id;
+            let user = {
+                id: data.users[data.id].id,
+                img: img,
+                name: name,
+                pattern: pattern,
+                keyWord: keyWord
+            }
+
+            Manager.createUser(user);
+
             this.setState({
-                user: {
-                    id: id,
-                    img: img,
-                    name: name,
-                    pattern: pattern
-                }
+                user: true
             });
         });
     }
@@ -110,7 +112,7 @@ class Chat extends React.Component {
         if (!Chat.validation(value)) return;
         Manager.socket.emit("addCommentRequest", {
             value: value,
-            user: this.state.user
+            user: Manager.getUser()
         });
 
         this.setState({
@@ -121,7 +123,7 @@ class Chat extends React.Component {
         });
     }
 
-    // textareaの値を更新する（スパゲティ)
+    // コメント入力欄の値を更新する（スパゲティ)
     updateInput(e) {
         let value = Mylib.split(e.target.value, "\n");
         value[0] ||= "";
@@ -160,8 +162,6 @@ class Chat extends React.Component {
     }
 
     handleClickWindow(e) {
-        console.log(document.cookie);
-        console.log(Manager.getCookie());
         let target = e.target;
         if (this.state.user && (target.className === "input-container" || target.parentNode.className === "input")) {
             this.activateInput();
@@ -172,11 +172,11 @@ class Chat extends React.Component {
     }
 
     componentDidMount() {
-        console.log("name: ", document.cookie.name)
-        // let cookie = Manager.getCookie();
-        // if (cookie.name && cookie.img && cookie.pattern) {
-        //     this.createUser(cookie.name, cookie.img, cookie.pattern);
-        // }
+        if (Manager.createUser()) {
+            this.setState({
+                user: true
+            })
+        }
         Manager.socket.on("addCommentResponse", data => { this.refrectComment(data) });
     }
 
@@ -195,9 +195,9 @@ class Chat extends React.Component {
                         params={this.state.input}
                         textarea={this.textarea}
                         isActive={this.state.isActive}
-                        handleChange={this.updateInput}
-                        handleClick={this.addComment}
-                        handleKeyDown={this.enterPost}
+                        onChange={this.updateInput}
+                        onClick={this.addComment}
+                        onKeyDown={this.enterPost}
                         buttonValue="送信"
                     />
                     {this.state.user ? null : <div id="chat-mask"></div>} {/*マスク*/}
