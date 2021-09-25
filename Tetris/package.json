@@ -11,7 +11,6 @@
         "npm": "7.20.x"
     },
     "dependencies": {
-        "p5": "^1.4.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "socket.io": "^4.2.0",
@@ -24,12 +23,9 @@
         "babel-cli": "^6.26.0",
         "babel-loader": "^8.2.2",
         "babel-preset-react-app": "^3.1.2",
-        "browser-sync": "^2.27.5",
         "browserify": "^17.0.0",
-        "chokidar": "^3.5.2",
         "gulp": "^4.0.2",
         "gulp-babel": "^8.0.0",
-        "gulp-browserify": "^0.5.1",
         "gulp-concat": "^2.6.1",
         "gulp-sass": "^5.0.0",
         "gulp-uglify": "^3.0.2",
