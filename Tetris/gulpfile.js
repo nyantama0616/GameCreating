@@ -86,6 +86,20 @@ gulp.task("watch", (done) => {
     done();
 });
 
+// dest/jsをすべてbrowserify
+gulp.task("browserify", (done) => {
+    let files = [
+        "index.min.js",
+        "solo.min.js",
+        "chat.min.js",
+        "multi.min.js"
+    ]
+    for (let file of files) {
+        exec(`browserify dest/js/${file} -o dest/js/${file}`);
+    }
+    done();
+})
+
 // dest/jsをすべて圧縮
 gulp.task("uglify", (done) => {
     let files = fs.readdirSync("dest/js");

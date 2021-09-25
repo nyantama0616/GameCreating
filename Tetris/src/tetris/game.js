@@ -83,6 +83,7 @@ class Game {
         let count = start - i;
         if (count == 0) {
             this.combo = 0;
+            this.updateCombo();
             return;
         }
         for (let i = start; i >= this.top; i--) {
@@ -91,8 +92,13 @@ class Game {
         this.top += count;
         this.combo++;
         this.score += this.combo * (Game.W - 2) * count * 100;
+        this.updateScore();
+        this.updateCombo();
         Background.BLOCK_DESTROY.play();
     }
+    
+    updateScore() { }; //マルチ用
+    updateCombo() { }; //マルチ用
     
     // 画面上の制限時間を更新
     updateTimer() {
