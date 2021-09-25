@@ -23,6 +23,10 @@ class Mylib {
         return s + Math.floor(Math.random() * t)
     }
 
+    static plusMinus() {
+        return (-1) ** (Math.random() < 0.5);
+    }
+
     static removeExtname(filename) {
         let result = "";
         for (let i = 0; i < filename.length; i++) {

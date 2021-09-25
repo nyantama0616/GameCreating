@@ -1,12 +1,12 @@
 class Block {
     static L = 20;
 
-    constructor(p, x, y, pattern = 0) {
+    constructor(p, x, y, pattern = 0, lit = false) {
         this.p = p;
         this.x = x;
         this.y = y;
         this.design = pattern; //ブロックを装飾する画像
-        this.lit = false; //ブロックを表示させるかどうか
+        this.lit = lit; //ブロックを表示させるかどうか
         this.isLocked = false; //ブロックが固定されるかどうか(アクティブなミノ以外のブロックは全て固定されている。)
         Object.seal(this);
     }
@@ -39,6 +39,15 @@ class Block {
         this.design = block.design;
         this.lit = block.lit;
         this.isLocked = block.isLocked;
+    }
+
+    // 編集用
+    editMode() {
+        if (this.p.isKeyPressed && this.p.key === "z") {
+            this.x = this.p.mouseX;
+            this.y = this.p.mouseY;
+            console.log(`${this.x}, ${this.y}`);
+        }
     }
 
     draw() {

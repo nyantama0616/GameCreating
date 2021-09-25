@@ -9,7 +9,6 @@ Manager.socket.on("joinUserToGameResponse", message => {
     switch (message) {
         case "wait":
             console.log("対戦相手を待っています。。。");
-            // document.getElementById("waiting").classList.remove("hidden");
             break;
         case "overCapacity":
             alert("店員オーバー");
@@ -55,7 +54,6 @@ const sketch = (p) => {
         let screen = p.createCanvas(w, h);
         Background.set();
         screen.position(p.displayWidth/2 - w/2, p.displayHeight/2 - (h/2 + 50));
-        // screen.position(p.displayWidth / 2 - 725, p.displayHeight / 2 - 450);
         screen.style("z-index: -1;")
         game = new GameMulti(p, 320, 50);
         opponent = new Opponent(p, 795, 50); w/2

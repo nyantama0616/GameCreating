@@ -99,7 +99,7 @@ class GameManager {
                 let pagename = getPagename(socket);
                 if (pagename === "multi") {
                     socket.adapter.rooms.forEach((_, room) => {
-                        if (room.length <= 12) {
+                        if (room && room.length <= 12) {
                             GameManager.games[room] && GameManager.games[room].handleDisconnect(socket);
                         }
                     })

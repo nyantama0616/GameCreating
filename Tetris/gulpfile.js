@@ -2,10 +2,8 @@ let gulp = require("gulp"),
     watch = require("gulp-watch"),
     concat = require("gulp-concat"),
     babel = require("gulp-babel"),
-    browserify = require("gulp-browserify"),
     uglify = require("gulp-uglify"),
     sass = require("gulp-sass")(require("node-sass")),
-    browserSync = require("browser-sync"),
     exec = require('child_process').exec
     fs = require("fs"),
     path = require("path");
@@ -30,7 +28,6 @@ function compressJS(pathname) {
 
     gulp.src(files.map(file => `${dir}/${file}`))
     .pipe(concat(`${dirname}.min.js`))
-    // .pipe(uglify())
     .pipe(gulp.dest("dest/js"));
 }
 
@@ -50,8 +47,6 @@ function compileAndCompressJSX(pathname) {
         .pipe(concat(`${dirname}.min.js`))
         .pipe(babel())
         .on('error', console.error.bind(console))
-        // .pipe(browserify())
-        // .pipe(uglify())
         .pipe(gulp.dest("dest/js"));
 }
 
@@ -88,28 +83,19 @@ gulp.task("watch", (done) => {
         }
     });
 
-    //リロード用(一旦止めとく)
-    // browserSync.init({
-    //     server: {
-    //         baseDir: './',
-    //         index: 'public/chat.html',
-    //     },
-    // });
-
-    watch("dest", (info) => {
-        // let pathname = info.history[0];
-        // let ex = path.extname(pathname).slice(1);
-        // if (ex === "js") {
-        //     gulp.src(pathname)
-        //         .pipe(uglify())
-        //         .pipe(gulp.dest("dest/"));
-        // }
-        // browserSync.reload();
-    });
-    //
-
     done();
 });
+
+// dest/jsをすべて圧縮
+gulp.task("uglify", (done) => {
+    let files = fs.readdirSync("dest/js");
+    for (let file of files) {
+        gulp.src(`dest/js/${file}`)
+            .pipe(uglify())
+            .pipe(gulp.dest("dest/js"));
+    }
+    done();
+})
 
 gulp.task("default", (done) => {
     exec("npm rebuild node-sass");
