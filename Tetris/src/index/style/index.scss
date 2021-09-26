@@ -19,7 +19,6 @@ body {
         top: 75%;
         left: 50%;
         transform: translate(-50%, -50%);
-        // background-color: rgb(82, 77, 77);
         width: 700px;
         height: 300px;
         display: flex;
@@ -31,7 +30,6 @@ body {
             opacity: 0;
             width: 200px;
             height: 200px;
-            // border-radius: 50%;
 
             &::before {
                 z-index: -1;
@@ -39,7 +37,6 @@ body {
                 pointer-events: none;
                 width: 100%;
                 height: 100%;
-                // border-radius: 50%;
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -62,7 +59,7 @@ body {
                 align-items: center;
                 
                 span {
-                    font-size: 68px;
+                    font-size: 64px;
                 }
             }
 

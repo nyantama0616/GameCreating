@@ -41,6 +41,11 @@ class Game {
             }
         }
         this.activeMino = Mino.createMino(p, Game.START_X, Game.START_Y, true, this); //色々あってコンストラクタの最後にミノ作成
+
+        // ミノ操作時意図しないスクロール禁止
+        addEventListener("keydown", (e) => {
+            e.preventDefault();
+        });
     }
 
     getBlock(i, j) {

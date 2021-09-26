@@ -195,22 +195,22 @@ class Mino {
         
         // キーボード ["j", "k", "l", "a", "d"] でミノを操作
         if (this.p.keyIsPressed && this.p.frameCount % 6 == 0) {
-            switch (this.p.key) {
-                case "j": //左に1マス移動
+            switch (this.p.keyCode) {
+                case 37: //左に1マス移動
                     this.moveLeft(field);
                     break
-                    case "k": //下に2マス移動
+                    case 40: //下に2マス移動
                         this.moveDown(field);
                         this.moveDown(field);
                         this.moveDown(field);
                     break;
-                case "l": //右に1マス移動
+                case 39: //右に1マス移動
                     this.moveRight(field);
                     break
-                case "a": //左に90度回転
+                case 65: //左に90度回転
                     this.rotateLeft(field);
                     break;
-                case "d": //右に90度回転
+                case 68: //右に90度回転
                     this.rotateRight(field);
                     break;
             }
